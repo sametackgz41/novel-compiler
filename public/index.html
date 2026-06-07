@@ -40,6 +40,22 @@
           <input type="text" id="novel-url" placeholder="Roman URL veya slug girin..." required autocomplete="off">
         </div>
 
+        <!-- Dynamic Preview Card -->
+        <div id="preview-card" class="preview-card hidden">
+          <img id="preview-cover" src="" alt="Kapak">
+          <div class="preview-info">
+            <h4 id="preview-title">...</h4>
+            <span id="preview-author" class="preview-author">...</span>
+            <div id="preview-genres" class="preview-genres"></div>
+          </div>
+        </div>
+        
+        <!-- Preview Loading -->
+        <div id="preview-loading" class="preview-loading hidden">
+          <span class="spinner-inline"></span>
+          <span>Kitap doğrulanıyor...</span>
+        </div>
+
         <div class="speed-row">
           <span class="speed-label">İndirme Hızı:</span>
           <div class="segment-control">

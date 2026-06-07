@@ -1,7 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const path = require('path');
-const { generateEpub } = require('./make-epub');
+const { generateEpub, fetchNovelDetails } = require('./make-epub');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +33,30 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000); // Check every 5 minutes
+
+// Endpoint: Get Novel Preview Details
+app.post('/api/epub/preview', async (req, res) => {
+  const { url } = req.body;
+  if (!url) {
+    return res.status(400).json({ error: 'Roman linki veya slug alanı zorunludur.' });
+  }
+
+  // Extract slug from URL if needed
+  let slug = url.trim();
+  if (slug.includes('novelgecesi.com')) {
+    const clean = slug.replace(/\/$/, '');
+    const parts = clean.split('/');
+    slug = parts[parts.length - 1];
+  }
+
+  try {
+    const details = await fetchNovelDetails(slug, () => {});
+    res.json(details);
+  } catch (err) {
+    console.error(`Error fetching preview for ${slug}:`, err.message);
+    res.status(500).json({ error: 'Önizleme bilgileri alınamadı.', details: err.message });
+  }
+});
 
 // Endpoint: Start EPUB Compile
 app.post('/api/epub/start', (req, res) => {

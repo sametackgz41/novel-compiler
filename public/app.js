@@ -72,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = novelUrlInput.value.trim();
     if (!url) return;
 
+    hidePreview();
+
     // Get selected concurrency
     const concurrencyRadio = document.querySelector('input[name="concurrency"]:checked');
     const concurrency = concurrencyRadio ? parseInt(concurrencyRadio.value, 10) : 2;
@@ -444,5 +446,90 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  // ==========================================
+  // DYNAMIC PREVIEW FUNCTIONALITY
+  // ==========================================
+  let previewTimeout = null;
+
+  novelUrlInput.addEventListener('input', () => {
+    if (previewTimeout) clearTimeout(previewTimeout);
+    
+    const inputVal = novelUrlInput.value.trim();
+    if (!inputVal || inputVal.length < 3) {
+      hidePreview();
+      return;
+    }
+
+    previewTimeout = setTimeout(() => {
+      fetchPreview(inputVal);
+    }, 600);
+  });
+
+  async function fetchPreview(urlOrSlug) {
+    const previewCard = document.getElementById('preview-card');
+    const previewLoading = document.getElementById('preview-loading');
+    const previewCover = document.getElementById('preview-cover');
+    const previewTitle = document.getElementById('preview-title');
+    const previewAuthor = document.getElementById('preview-author');
+    const previewGenres = document.getElementById('preview-genres');
+
+    if (previewCard) previewCard.classList.add('hidden');
+    if (previewLoading) previewLoading.classList.remove('hidden');
+
+    try {
+      const response = await fetch('/api/epub/preview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: urlOrSlug })
+      });
+
+      if (!response.ok) {
+        throw new Error('Bilgi alınamadı');
+      }
+
+      const details = await response.json();
+      
+      if (previewTitle) previewTitle.textContent = details.title || urlOrSlug;
+      if (previewAuthor) previewAuthor.textContent = `Yazar: ${details.author || 'Bilinmiyor'}`;
+      
+      if (previewGenres) {
+        previewGenres.innerHTML = '';
+        if (details.genres && details.genres.length > 0) {
+          details.genres.slice(0, 3).forEach(g => {
+            const badge = document.createElement('span');
+            badge.className = 'badge';
+            badge.textContent = g;
+            previewGenres.appendChild(badge);
+          });
+        }
+      }
+
+      if (previewCover) {
+        if (details.coverUrl) {
+          previewCover.src = details.coverUrl;
+          previewCover.classList.remove('hidden');
+        } else {
+          previewCover.classList.add('hidden');
+        }
+      }
+
+      if (previewLoading) previewLoading.classList.add('hidden');
+      if (previewCard) previewCard.classList.remove('hidden');
+
+    } catch (err) {
+      if (previewLoading) previewLoading.classList.add('hidden');
+      if (previewCard) previewCard.classList.add('hidden');
+    }
+  }
+
+  function hidePreview() {
+    const previewCard = document.getElementById('preview-card');
+    const previewLoading = document.getElementById('preview-loading');
+    if (previewCard) previewCard.classList.add('hidden');
+    if (previewLoading) previewLoading.classList.add('hidden');
   }
 });

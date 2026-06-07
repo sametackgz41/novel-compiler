@@ -496,4 +496,4 @@ Kullanım: node make-epub.js <url_veya_slug> [paralel_istek_sayısı]
   });
 }
 
-module.exports = { generateEpub };
+module.exports = { generateEpub, fetchNovelDetails };
