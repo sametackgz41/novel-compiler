@@ -1,0 +1,19 @@
+{
+  "name": "novel-gecesi-reader",
+  "version": "1.0.0",
+  "description": "An ad-free premium web novel reader and scraper client",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "compression": "^1.7.4",
+    "express": "^4.19.2",
+    "jszip": "^3.10.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

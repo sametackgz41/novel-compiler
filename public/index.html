@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel EPUB Compiler — Minimalist Web Novel Downloader</title>
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="minimal-theme">
+
+  <div class="minimal-container">
+    
+    <!-- Sleek Minimal Header -->
+    <header class="minimal-header">
+      <div class="logo">
+        <span class="material-icons logo-icon">menu_book</span>
+        <h1 class="logo-title">Novel <span class="accent">EPUB</span></h1>
+      </div>
+      <div class="status-dot-wrapper" title="Sistem Hazır">
+        <span class="status-dot"></span>
+        <span class="status-lbl">Hazır</span>
+      </div>
+    </header>
+
+    <!-- Main Central Card -->
+    <main class="compiler-card glass-effect">
+      
+      <!-- Section 1: Form (Input & Speed) -->
+      <form id="compile-form" class="compile-form">
+        <div class="form-title-group">
+          <h2>E-Kitap Derleyici</h2>
+          <p>Roman linkini yapıştırın ve derleme hızını seçin.</p>
+        </div>
+
+        <div class="input-field-wrapper">
+          <span class="material-icons field-icon">link</span>
+          <input type="text" id="novel-url" placeholder="Roman URL veya slug girin..." required autocomplete="off">
+        </div>
+
+        <div class="speed-row">
+          <span class="speed-label">İndirme Hızı:</span>
+          <div class="segment-control">
+            <label class="segment-option">
+              <input type="radio" name="concurrency" value="1">
+              <span class="segment-btn">1x (Güvenli)</span>
+            </label>
+            <label class="segment-option">
+              <input type="radio" name="concurrency" value="2" checked>
+              <span class="segment-btn">2x (Dengeli)</span>
+            </label>
+            <label class="segment-option">
+              <input type="radio" name="concurrency" value="3">
+              <span class="segment-btn">3x (Hızlı)</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit" class="primary-button">
+          <span class="material-icons">bolt</span> Derlemeyi Başlat
+        </button>
+      </form>
+
+      <!-- Section 2: Progress Area (Visible when running, styled compact) -->
+      <div id="status-panel" class="status-panel hidden">
+        <div class="status-summary">
+          <div class="status-meta">
+            <h3 id="status-novel-title">Roman Yükleniyor...</h3>
+            <p id="status-message">İşlem başlatılıyor...</p>
+            <span id="status-speed-info" class="speed-badge">Hız: 2x</span>
+          </div>
+
+          <!-- Circular Loader -->
+          <div class="progress-ring-wrapper">
+            <svg class="progress-ring" width="80" height="80">
+              <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.03)" stroke-width="6" fill="transparent" r="34" cx="40" cy="40"/>
+              <circle id="progress-circle" class="progress-ring-circle" stroke="var(--accent-color)" stroke-width="6" stroke-dasharray="213.6" stroke-dashoffset="213.6" fill="transparent" r="34" cx="40" cy="40"/>
+            </svg>
+            <div class="progress-ring-text">
+              <span id="progress-percent">0%</span>
+              <span class="progress-fraction" id="progress-fraction">0/0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Console Button -->
+        <div class="console-actions-row">
+          <button type="button" id="btn-toggle-console" class="text-button">
+            <span class="material-icons">terminal</span> <span id="toggle-console-text">İşlem Günlüklerini Göster</span>
+          </button>
+        </div>
+
+        <!-- Terminal Logs Drawer (Collapsed by default) -->
+        <div class="console-drawer collapsed" id="console-drawer">
+          <div class="console-drawer-header">
+            <span class="console-lbl">Terminal Canlı Akışı</span>
+            <button id="btn-clear-console" class="icon-only-btn" title="Konsolu Temizle">
+              <span class="material-icons">delete_sweep</span>
+            </button>
+          </div>
+          <div class="console-logs" id="console-logs">
+            <div class="log-line info">[00:00:00] [SYSTEM] Konsol hazır.</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Section 3: History (Compact Flat Table) -->
+    <section class="history-section glass-effect">
+      <div class="history-header">
+        <h3><span class="material-icons">history</span> Son Derlemeler</h3>
+      </div>
+      
+      <div class="history-list-container">
+        <table class="history-table">
+          <tbody id="history-tbody">
+            <tr class="empty-history-row">
+              <td class="empty-history">
+                <span class="material-icons">folder_open</span>
+                <p>Geçmiş derleme kaydı bulunmuyor.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Minimal Footer -->
+    <footer class="minimal-footer">
+      <p>&copy; 2026 Novel EPUB Compiler</p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
